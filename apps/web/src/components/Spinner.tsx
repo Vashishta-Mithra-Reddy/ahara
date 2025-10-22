@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function Spinner() {
 	return (
-		<div className="wrapperx flex min-h-screen items-center justify-center">
+		<div className="wrapperx flex h-full items-center justify-center">
 			<motion.svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 375 375"
