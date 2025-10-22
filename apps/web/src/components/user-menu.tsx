@@ -22,7 +22,7 @@ export default function UserMenu() {
 
 	if (!session) {
 		return (
-			<Button variant="outline" asChild>
+			<Button variant="outline" asChild className="px-4 py-5">
 				<Link href="/login">Sign In</Link>
 			</Button>
 		);

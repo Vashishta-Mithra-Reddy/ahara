@@ -2,7 +2,7 @@ import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import z from "zod";
-import Loader from "./loader";
+import Spinner from "./Spinner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -50,7 +50,7 @@ export default function SignUpForm({
 	});
 
 	if (isPending) {
-		return <Loader />;
+		return <Spinner />;
 	}
 
 	return (

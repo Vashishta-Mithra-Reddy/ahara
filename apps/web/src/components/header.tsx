@@ -11,8 +11,11 @@ export default function Header() {
 
 	return (
 		<div>
-			<div className="flex flex-row items-center justify-between px-2 py-1">
-				<nav className="flex gap-4 text-lg">
+			<div className="flex font-outfit flex-row items-center justify-between px-12 py-4">
+				<Link href={"/"} className="font-outfit text-3xl font-medium">
+					āhāra
+				</Link>
+				<nav className="flex gap-4 text-medium">
 					{links.map(({ to, label }) => {
 						return (
 							<Link key={to} href={to}>
