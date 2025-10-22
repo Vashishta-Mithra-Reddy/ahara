@@ -12,7 +12,7 @@ import { Skeleton } from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function UserMenu() {
+export default function UserMenu({ className }: { className?: string }) {
 	const router = useRouter();
 	const { data: session, isPending } = authClient.useSession();
 
@@ -22,7 +22,7 @@ export default function UserMenu() {
 
 	if (!session) {
 		return (
-			<Button variant="outline" asChild className="px-4 py-5">
+			<Button variant="outline" asChild className={`px-4 py-5 ${className}`}>
 				<Link href="/login">Sign In</Link>
 			</Button>
 		);
