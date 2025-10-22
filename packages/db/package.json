@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "lint": "biome check --write .",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",

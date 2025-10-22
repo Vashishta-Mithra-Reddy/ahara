@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "../index.css";
-import Providers from "@/components/providers";
 import Header from "@/components/header";
+import Providers from "@/components/providers";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -35,7 +35,7 @@ export default function RootLayout({
 				className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<Providers>
-					<div className="grid grid-rows-[auto_1fr] h-svh">
+					<div className="grid h-svh grid-rows-[auto_1fr]">
 						<Header />
 						{children}
 					</div>

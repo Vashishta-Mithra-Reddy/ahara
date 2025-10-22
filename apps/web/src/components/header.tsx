@@ -11,8 +11,8 @@ export default function Header() {
 
 	return (
 		<div>
-			<div className="flex font-outfit flex-row items-center justify-between px-12 py-4">
-				<Link href={"/"} className="font-outfit text-3xl font-medium">
+			<div className="flex flex-row items-center justify-between px-12 py-4 font-outfit">
+				<Link href={"/"} className="font-medium font-outfit text-3xl text-glow">
 					āhāra
 				</Link>
 				<nav className="flex gap-4 text-medium">

@@ -12,7 +12,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsdown"
+    "build": "tsdown",
+    "lint": "biome check --write ."
   },
   "devDependencies": {
     "tsdown": "catalog:"
