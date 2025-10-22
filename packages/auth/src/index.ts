@@ -3,8 +3,9 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@ahara/db";
 import * as schema from "@ahara/db/schema/auth";
+// import type { BetterAuthOptions } from "better-auth";
 
-export const auth = betterAuth({
+export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 
