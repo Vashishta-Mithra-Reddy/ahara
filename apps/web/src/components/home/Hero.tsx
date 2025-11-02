@@ -1,6 +1,11 @@
 "use client";
+import dynamic from "next/dynamic";
 
-import { Warp } from "@paper-design/shaders-react";
+const Warp = dynamic(
+	() => import("@paper-design/shaders-react").then((mod) => ({ default: mod.Warp })),
+	{ ssr: false }
+);
+
 import { motion } from "framer-motion";
 import AuthButton from "../auth/AuthButton";
 export default function Hero() {
