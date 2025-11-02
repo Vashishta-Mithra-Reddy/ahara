@@ -66,6 +66,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
     },
 	plugins: [nextCookies(), expo()]
 });
+type Session = typeof auth.$Infer.Session
 
 export * from "./queries/food-diary";
 export * from "./queries/push";
