@@ -40,6 +40,20 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		provider: "pg",
 		schema: schema,
 	}),
+	user: {
+       additionalFields: {
+          onboardingCompleted: {
+              type: "boolean",
+              input: true,
+              defaultValue: false
+          },
+          onboardingCompletedAt: {
+              type: "date",
+              input: true,
+              required: false
+          }
+        }
+    },
 	trustedOrigins: [...safeTrustedOrigins,"exp://","mybettertapp://","ahara://"],
 	emailAndPassword: {
 		enabled: true,
