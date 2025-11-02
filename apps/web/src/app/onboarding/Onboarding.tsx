@@ -19,7 +19,6 @@ import { Plus, X, CheckCircle, Activity } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import Spinner from "@/components/blocks/Spinner";
-import { LiquidMetal } from "@paper-design/shaders-react";
 
 interface TrackingItem {
 	id: string;

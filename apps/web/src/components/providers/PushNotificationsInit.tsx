@@ -7,7 +7,10 @@ export default function PushNotificationsInit() {
   useEffect(() => {
     async function setup() {
       try {
-        if (typeof window === "undefined" || !("Notification" in window)) return;
+        // Ensure we're in the browser environment
+        if (typeof window === "undefined" || typeof navigator === "undefined") return;
+        if (!("Notification" in window) || !("serviceWorker" in navigator)) return;
+        
         if (Notification.permission === "granted") {
           const registration = await navigator.serviceWorker.ready;
           const token = await getWebPushToken(registration);

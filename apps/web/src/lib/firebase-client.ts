@@ -11,6 +11,9 @@ const firebaseConfig = {
 };
 
 export async function initFirebaseMessaging() {
+  // Ensure we're in the browser environment
+  if (typeof window === "undefined" || typeof navigator === "undefined") return null;
+  
   const supported = await isSupported().catch(() => false);
   if (!supported) return null;
 
@@ -48,6 +51,9 @@ export async function initFirebaseMessaging() {
 }
 
 export async function getWebPushToken(registration?: ServiceWorkerRegistration) {
+  // Ensure we're in the browser environment
+  if (typeof window === "undefined") return null;
+  
   const messaging = await initFirebaseMessaging();
   if (!messaging) return null;
   const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!;
