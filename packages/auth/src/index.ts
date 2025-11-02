@@ -60,13 +60,12 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	},
 	socialProviders: {
         google: { 
-            clientId: [process.env.GOOGLE_WEB_CLIENT_ID as string, process.env.GOOGLE_NATIVE_CLIENT_ID as string], 
+            clientId: process.env.GOOGLE_WEB_CLIENT_ID as string, 
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
         }, 
     },
 	plugins: [nextCookies(), expo()]
 });
-type Session = typeof auth.$Infer.Session
 
 export * from "./queries/food-diary";
 export * from "./queries/push";
