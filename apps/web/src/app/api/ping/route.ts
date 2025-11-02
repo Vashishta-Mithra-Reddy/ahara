@@ -7,7 +7,9 @@ import {
 	createDailyCheckInForServiceRequest,
 	updateDailyCheckInForServiceRequest,
 	getUserByIdForServiceRequest,
+	getPushTokensByUserForServiceRequest,
 } from "@ahara/auth";
+import { sendPushToToken, type PushPayload } from "@/lib/fcm";
 
 function hhmmToMinutes(hhmm?: string): number {
 	if (!hhmm) return 0;
@@ -71,27 +73,41 @@ function getLocalParts(date: Date, timeZone: string) {
 	return { year: y, month: m, day: d, hour: h, minute: min, second: sec, offsetMin };
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
-	const apiKey = process.env.RESEND_API_KEY;
-	const from = process.env.MAIL_FROM || "Ahara <noreply@ahara.app>";
-	if (!apiKey) {
-		console.log("Email (simulated):", { to, subject, html });
-		return true;
+async function sendPushNotification(userId: string, payload: PushPayload, headers: any): Promise<boolean> {
+	try {
+		// Get all active push tokens for the user
+		const tokens = await getPushTokensByUserForServiceRequest({
+			headers,
+			userId,
+		});
+		
+		if (!tokens || tokens.length === 0) {
+			console.log(`[FCM] No push tokens found for user ${userId}`);
+			return false;
+		}
+
+		let successCount = 0;
+		const tokenArray = Array.isArray(tokens) ? tokens : [tokens];
+		
+		// Send to all user's devices
+		for (const tokenRecord of tokenArray) {
+			const token = (tokenRecord as any)?.token;
+			if (token) {
+				const success = await sendPushToToken(token, payload);
+				if (success) {
+					successCount++;
+				} else {
+					console.warn(`[FCM] Failed to send to token: ${token.substring(0, 20)}...`);
+				}
+			}
+		}
+
+		console.log(`[FCM] Sent push notification to ${successCount}/${tokenArray.length} devices for user ${userId}`);
+		return successCount > 0;
+	} catch (error) {
+		console.error(`[FCM] Error sending push notification to user ${userId}:`, error);
+		return false;
 	}
-	const resp = await fetch("https://api.resend.com/emails", {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${apiKey}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			from,
-			to,
-			subject,
-			html,
-		}),
-	});
-	return resp.ok;
 }
 
 // Fixed internal window durations
@@ -170,13 +186,12 @@ export async function GET(req: Request) {
 			record = Array.isArray(created) ? created[0] : created;
 		}
 
-		// Fetch user for email
+		// Fetch user for notifications
 		const userRows = await getUserByIdForServiceRequest({
 			headers: req.headers,
 			userId,
 		});
 		const userObj = Array.isArray(userRows) ? userRows[0] : userRows;
-		const toEmail = (userObj as any)?.email;
 		const userName = (userObj as any)?.name ?? "there";
 
 		// Log Reminder
@@ -185,14 +200,21 @@ export async function GET(req: Request) {
 			const alreadyLogged = !!(record as any)?.hasLoggedTriggers;
 			const alreadySent = !!(record as any)?.logReminderSent;
 
-			if (inWindow && !alreadyLogged && !alreadySent && toEmail) {
+			if (inWindow && !alreadyLogged && !alreadySent) {
 				const windowLabel = formatLocalWindowLabel(logStartMin, logEndMin);
-				const ok = await sendEmail(
-					toEmail,
-					"Reminder: log your food",
-					`<p>Hey ${userName},</p><p>We'll remind you between <strong>${windowLabel}</strong> to log your food today.</p><p>Open Ahara to record your entries.</p>`,
-				);
-				if (ok) {
+				const pushPayload: PushPayload = {
+					title: "🍽️ Time to log your food!",
+					body: `Hey ${userName}, don't forget to log your meals today (${windowLabel})`,
+					data: {
+						url: "/dashboard/food-log",
+						action: "food_log_reminder",
+						type: "daily_log_reminder",
+						userId: userId,
+					},
+				};
+
+				const success = await sendPushNotification(userId, pushPayload, req.headers);
+				if (success) {
 					await updateDailyCheckInForServiceRequest({
 						headers: req.headers,
 						id: (record as any).id,
@@ -209,14 +231,21 @@ export async function GET(req: Request) {
 			const alreadyLogged = !!(record as any)?.hasLoggedSymptoms;
 			const alreadySent = !!(record as any)?.symptomReminderSent;
 
-			if (inWindow && !alreadyLogged && !alreadySent && toEmail) {
+			if (inWindow && !alreadyLogged && !alreadySent) {
 				const windowLabel = formatLocalWindowLabel(symptomStartMin, symptomEndMin);
-				const ok = await sendEmail(
-					toEmail,
-					"Reminder: check your symptoms",
-					`<p>Hey ${userName},</p><p>We'll remind you between <strong>${windowLabel}</strong> to check symptoms today.</p><p>Open Ahara to record your state.</p>`,
-				);
-				if (ok) {
+				const pushPayload: PushPayload = {
+					title: "💭 Time for your daily reflection!",
+					body: `Hey ${userName}, how are you feeling today? (${windowLabel})`,
+					data: {
+						url: "/dashboard/reflection",
+						action: "symptom_check_reminder",
+						type: "symptom_check_reminder",
+						userId: userId,
+					},
+				};
+
+				const success = await sendPushNotification(userId, pushPayload, req.headers);
+				if (success) {
 					await updateDailyCheckInForServiceRequest({
 						headers: req.headers,
 						id: (record as any).id,
@@ -231,6 +260,12 @@ export async function GET(req: Request) {
 	return NextResponse.json({
 		success: true,
 		processed: settings.length,
-		sent: { log: sentLog, symptom: sentSymptom },
+		sent: { 
+			log: sentLog, 
+			symptom: sentSymptom,
+			total: sentLog + sentSymptom
+		},
+		timestamp: new Date().toISOString(),
+		method: "fcm_push_notifications"
 	});
 }

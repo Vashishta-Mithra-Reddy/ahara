@@ -34,7 +34,7 @@ const steps = [
 export default function SetupProcess() {
 	const router = useRouter();
 	return (
-		<section className="py-16 px-4 bg-muted/10 border-y-2 border-dashed">
+		<section className="py-16 px-4 border-y-2 border-dashed">
 			<div className="max-w-6xl mx-auto">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
