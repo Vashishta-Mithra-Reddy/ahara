@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { auth } from "@ahara/auth";
 import {
-	getUserOnboardingStatusForRequest,
-	createUserOnboardingStatusForRequest,
-	updateUserOnboardingStatusForRequest,
 	getReminderSettingsByUserForRequest,
 	createReminderSettingsForRequest,
 } from "@ahara/auth";
@@ -12,16 +10,23 @@ import {
 export async function GET(request: NextRequest) {
 	try {
 		const requestHeaders = await headers();
-		const status = await getUserOnboardingStatusForRequest({
+		const session = await auth.api.getSession({
 			headers: requestHeaders,
 		});
+
+		if (!session?.user) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
+		// Return onboarding status from session data
+		const status = {
+			completed: session.user.onboardingCompleted || false,
+			completedAt: session.user.onboardingCompletedAt || null,
+		};
 
 		return NextResponse.json(status);
 	} catch (error) {
 		console.error("Error fetching onboarding status:", error);
-		if (error instanceof Error && error.message === "Unauthorized") {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 		return NextResponse.json(
 			{ error: "Failed to fetch onboarding status" },
 			{ status: 500 },
@@ -29,11 +34,11 @@ export async function GET(request: NextRequest) {
 	}
 }
 
-// POST /api/onboarding - Create onboarding status
+// POST /api/onboarding - Create/Update onboarding status
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json();
-		const { completed, completedAt } = body;
+		const { completed, completedAt, timezone } = body;
 
 		// Validation
 		if (completed !== undefined && typeof completed !== "boolean") {
@@ -51,13 +56,27 @@ export async function POST(request: NextRequest) {
 		}
 
 		const requestHeaders = await headers();
-		const status = await createUserOnboardingStatusForRequest({
+		
+		// Use Better Auth's updateUser function
+		const updateData: any = {};
+		if (completed !== undefined) {
+			updateData.onboardingCompleted = completed;
+		}
+		if (completedAt) {
+			updateData.onboardingCompletedAt = new Date(completedAt);
+		} else if (completed === true && !completedAt) {
+			// Auto-set completion time if not provided
+			updateData.onboardingCompletedAt = new Date();
+		}
+
+		const result = await auth.api.updateUser({
+			body: updateData,
 			headers: requestHeaders,
-			payload: {
-				completed: completed ?? false,
-				completedAt: completedAt ? new Date(completedAt) : undefined,
-			},
 		});
+
+		if (!result) {
+			return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+		}
 
 		// Auto-populate default reminder settings if onboarding completed and none exist
 		if (completed === true) {
@@ -69,8 +88,7 @@ export async function POST(request: NextRequest) {
 				await createReminderSettingsForRequest({
 					headers: requestHeaders,
 					payload: {
-						// Prefer client-provided timezone; fallback to UTC
-						timezone: (request as any)?.body?.timezone ?? "UTC",
+						timezone: timezone ?? "UTC",
 						dailyLogReminder: true,
 						logReminderTime: "20:00",
 						symptomCheckReminder: true,
@@ -80,14 +98,25 @@ export async function POST(request: NextRequest) {
 			}
 		}
 
+		// Get the updated session to return current status
+		const updatedSession = await auth.api.getSession({
+			headers: requestHeaders,
+		});
+
+		// Return the updated status
+		const status = {
+			completed: updatedSession?.user?.onboardingCompleted || false,
+			completedAt: updatedSession?.user?.onboardingCompletedAt || null,
+		};
+
 		return NextResponse.json(status, { status: 201 });
 	} catch (error) {
-		console.error("Error creating onboarding status:", error);
+		console.error("Error updating onboarding status:", error);
 		if (error instanceof Error && error.message === "Unauthorized") {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 		return NextResponse.json(
-			{ error: "Failed to create onboarding status" },
+			{ error: "Failed to update onboarding status" },
 			{ status: 500 },
 		);
 	}
@@ -97,7 +126,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
 	try {
 		const body = await request.json();
-		const { completed, completedAt } = body;
+		const { completed, completedAt, timezone } = body;
 
 		// Validation
 		if (completed !== undefined && typeof completed !== "boolean") {
@@ -115,13 +144,27 @@ export async function PUT(request: NextRequest) {
 		}
 
 		const requestHeaders = await headers();
-		const status = await updateUserOnboardingStatusForRequest({
+		
+		// Use Better Auth's updateUser function
+		const updateData: any = {};
+		if (completed !== undefined) {
+			updateData.onboardingCompleted = completed;
+		}
+		if (completedAt) {
+			updateData.onboardingCompletedAt = new Date(completedAt);
+		} else if (completed === true && completedAt === undefined) {
+			// Auto-set completion time if not provided but completed is true
+			updateData.onboardingCompletedAt = new Date();
+		}
+
+		const result = await auth.api.updateUser({
+			body: updateData,
 			headers: requestHeaders,
-			payload: {
-				completed,
-				completedAt: completedAt ? new Date(completedAt) : undefined,
-			},
 		});
+
+		if (!result) {
+			return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+		}
 
 		// Auto-populate defaults on update when completed flips to true
 		if (completed === true) {
@@ -130,12 +173,10 @@ export async function PUT(request: NextRequest) {
 			});
 			const hasSettings = Array.isArray(existing) ? !!existing[0] : !!existing;
 			if (!hasSettings) {
-				// Parse timezone from request body if provided
-				const body = await request.json().catch(() => ({}));
 				await createReminderSettingsForRequest({
 					headers: requestHeaders,
 					payload: {
-						timezone: body?.timezone ?? "UTC",
+						timezone: timezone ?? "UTC",
 						dailyLogReminder: true,
 						logReminderTime: "20:00",
 						symptomCheckReminder: true,
@@ -144,6 +185,17 @@ export async function PUT(request: NextRequest) {
 				});
 			}
 		}
+
+		// Get the updated session to return current status
+		const updatedSession = await auth.api.getSession({
+			headers: requestHeaders,
+		});
+
+		// Return the updated status
+		const status = {
+			completed: updatedSession?.user?.onboardingCompleted || false,
+			completedAt: updatedSession?.user?.onboardingCompletedAt || null,
+		};
 
 		return NextResponse.json(status);
 	} catch (error) {

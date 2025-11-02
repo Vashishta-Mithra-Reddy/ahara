@@ -1,19 +1,19 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getUserOnboardingStatusForRequest } from "@ahara/auth";
+import { auth } from "@ahara/auth";
 
 export default async function OnboardingGuard() {
 	try {
 		const requestHeaders = await headers();
-		const onboardingStatus = await getUserOnboardingStatusForRequest({
-			headers: requestHeaders,
-		});
+		const session = await auth.api.getSession({ headers: requestHeaders });
 
-		// onboardingStatus is an array, check if any status is completed
-		const isCompleted =
-			onboardingStatus &&
-			onboardingStatus.length > 0 &&
-			onboardingStatus[0]?.completed;
+		// If no session, redirect to login
+		if (!session?.user) {
+			redirect("/login");
+		}
+
+		// Check onboarding status from session data
+		const isCompleted = session.user.onboardingCompleted || false;
 
 		// If onboarding is not completed, redirect to onboarding
 		if (!isCompleted) {

@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@ahara/auth";
-import { getUserOnboardingStatusForRequest } from "@ahara/auth";
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -22,14 +21,7 @@ export default async function ProtectedRoute({
 
 	// Require onboarding if requested
 	if (requireOnboarding) {
-		const onboardingStatus = await getUserOnboardingStatusForRequest({
-			headers: requestHeaders,
-		});
-
-		const isCompleted =
-			Array.isArray(onboardingStatus) &&
-			onboardingStatus.length > 0 &&
-			onboardingStatus[0]?.completed === true;
+		const isCompleted = session.user.onboardingCompleted || false;
 
 		if (!isCompleted) {
 			redirect("/onboarding");

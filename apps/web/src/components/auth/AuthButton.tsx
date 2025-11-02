@@ -1,40 +1,12 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
 export default function AuthButton({ className }: { className?: string }) {
 	const { data: session, isPending } = authClient.useSession();
-	const [onboardingCompleted, setOnboardingCompleted] = useState<
-		boolean | null
-	>(null);
-
-	useEffect(() => {
-		if (!session) {
-			setOnboardingCompleted(null);
-			return;
-		}
-		let cancelled = false;
-		(async () => {
-			try {
-				const res = await fetch("/api/onboarding");
-				if (res.ok) {
-					const status = await res.json();
-					const isCompleted = Array.isArray(status)
-						? status[0]?.completed === true
-						: !!status?.completed;
-					if (!cancelled) setOnboardingCompleted(isCompleted);
-				} else {
-					if (!cancelled) setOnboardingCompleted(true);
-				}
-			} catch {
-				if (!cancelled) setOnboardingCompleted(true);
-			}
-		})();
-		return () => {
-			cancelled = true;
-		};
-	}, [session]);
+	
+	// Get onboarding status directly from session data
+	const onboardingCompleted = session?.user?.onboardingCompleted || false;
 
 	if (isPending) {
 		return (
@@ -58,11 +30,11 @@ export default function AuthButton({ className }: { className?: string }) {
 
 	return (
 		<Link
-			href={onboardingCompleted === false ? "/onboarding" : "/dashboard"}
+			href={!onboardingCompleted ? "/onboarding" : "/dashboard"}
 			className={`flex cursor-pointer items-center gap-2 rounded-xl border-2 border-white/40 px-6 py-3 text-center text-white transition-all duration-500 hover:bg-white/20 hover:text-white/90 font-jakarta ${className || ""}`}
 		>
 			<span className="font-medium text-base">
-				{onboardingCompleted === false
+				{!onboardingCompleted
 					? "Complete Onboarding"
 					: "Go to Dashboard"}
 			</span>
