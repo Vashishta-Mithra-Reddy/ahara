@@ -10,7 +10,8 @@
   "backend": "self",
   "runtime": "none",
   "frontend": [
-    "next"
+    "next",
+    "native-nativewind"
   ],
   "addons": [
     "turborepo",

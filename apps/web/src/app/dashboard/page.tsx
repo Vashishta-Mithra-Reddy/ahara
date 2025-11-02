@@ -1,23 +1,20 @@
-import { auth } from "@ahara/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+// import { auth } from "@ahara/auth";
+// import { headers } from "next/headers";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Dashboard from "./dashboard";
+import { Suspense } from "react";
+import Spinner from "@/components/blocks/Spinner";
 
 export default async function DashboardPage() {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
-	if (!session?.user) {
-		redirect("/login");
-	}
+	// const session = await auth.api.getSession({
+	// 	headers: await headers(),
+	// });
 
 	return (
-		<div>
-			<h1>Dashboard</h1>
-			<p>Welcome {session.user.name}</p>
-			<Dashboard session={session} />
-		</div>
+		<Suspense fallback={<Spinner/>}>
+		<ProtectedRoute requireOnboarding={true}>
+			<Dashboard />
+		</ProtectedRoute>
+		</Suspense>
 	);
 }

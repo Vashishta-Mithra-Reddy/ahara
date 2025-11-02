@@ -1,15 +1,20 @@
-"use client";
+import { auth } from "@ahara/auth";
+import { headers } from "next/headers";
+import Login from "./login";
+import { redirect } from "next/navigation";
 
-import { useState } from "react";
-import SignInForm from "@/components/sign-in-form";
-import SignUpForm from "@/components/sign-up-form";
+export default async function LoginPage() {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-export default function LoginPage() {
-	const [showSignIn, setShowSignIn] = useState(true);
+	if (session) {
+		return redirect("/dashboard");
+	}
 
-	return showSignIn ? (
-		<SignInForm onSwitchToSignUp={() => setShowSignIn(false)} />
-	) : (
-		<SignUpForm onSwitchToSignIn={() => setShowSignIn(true)} />
+	return (
+	<div className="flex-center">
+		<Login />
+	</div>
 	);
 }

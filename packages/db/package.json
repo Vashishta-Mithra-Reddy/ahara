@@ -1,6 +1,5 @@
 {
   "name": "@ahara/db",
-  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -11,6 +10,7 @@
       "default": "./src/*.ts"
     }
   },
+  "type": "module",
   "scripts": {
     "build": "tsdown",
     "lint": "biome check --write .",

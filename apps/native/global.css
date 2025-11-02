@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* pure white */
+    --foreground: 0 0% 7%; /* near-black text */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 0 0% 10%; /* deep black for buttons, links */
+    --primary-foreground: 0 0% 100%; /* white text on black */
+    --secondary: 0 0% 96%; /* subtle gray background sections */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 94%; /* light gray for muted backgrounds */
+    --muted-foreground: 0 0% 40%; /* medium gray text */
+    --accent: 0 0% 10%; /* reuse black for accent emphasis */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 45%; /* muted red for errors */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%; /* soft gray borders */
+    --input: 0 0% 90%;
+    --ring: 0 0% 10%; /* black ring */
+    --radius: 8px;
+  }
+
+  .dark:root {
+    --background: 0 0% 5% ; /* deep black background */
+    --foreground: 0 0% 95%; /* near-white text */
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 98%; /* white for primary buttons */
+    --primary-foreground: 0 0% 7%; /* black text */
+    --secondary: 0 0% 12%; /* slightly lighter black */
+    --secondary-foreground: 0 0% 90%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 98%;
+    --accent-foreground: 0 0% 7%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 98%;
+  }
+}
