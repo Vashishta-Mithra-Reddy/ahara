@@ -35,7 +35,7 @@ const safeTrustedOrigins = rawOrigins
 	.filter(isValidHttpOrigin)
 	.map((o) => o!.replace(/\/+$/, ""));
 
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		schema: schema,
