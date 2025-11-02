@@ -13,17 +13,18 @@ export async function GET(request: NextRequest) {
 		const session = await auth.api.getSession({
 			headers: requestHeaders,
 		});
-
-		// const user = session?.user;
+	
 
 		if (!session?.user) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
+		const user = session?.user;
+
 		// Return onboarding status from session data
 		const status = {
-			completed: session.user.onboardingCompleted || false,
-			completedAt: session.user.onboardingCompletedAt || null,
+			completed: user.onboardingCompleted || false,
+			completedAt: user.onboardingCompletedAt || null,
 		};
 
 		return NextResponse.json(status);
