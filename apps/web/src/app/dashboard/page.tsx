@@ -10,6 +10,10 @@ export default async function DashboardPage() {
 	// 	headers: await headers(),
 	// });
 
+	// if (!session?.user) {
+	// 	redirect("/login");
+	// }
+
 	return (
 		<Suspense fallback={<Spinner/>}>
 		<ProtectedRoute requireOnboarding={true}>
