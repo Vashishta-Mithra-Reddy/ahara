@@ -75,6 +75,8 @@ function getLocalParts(date: Date, timeZone: string) {
 
 async function sendPushNotification(userId: string, payload: PushPayload, headers: any): Promise<boolean> {
 	try {
+		console.log(`[FCM] Attempting to send push notification to user ${userId}`);
+		
 		// Get all active push tokens for the user
 		const tokens = await getPushTokensByUserForServiceRequest({
 			headers,
@@ -89,16 +91,22 @@ async function sendPushNotification(userId: string, payload: PushPayload, header
 		let successCount = 0;
 		const tokenArray = Array.isArray(tokens) ? tokens : [tokens];
 		
+		console.log(`[FCM] Found ${tokenArray.length} push token(s) for user ${userId}`);
+		
 		// Send to all user's devices
 		for (const tokenRecord of tokenArray) {
 			const token = (tokenRecord as any)?.token;
 			if (token) {
+				console.log(`[FCM] Sending to token: ${token.substring(0, 20)}...`);
 				const success = await sendPushToToken(token, payload);
 				if (success) {
 					successCount++;
+					console.log(`[FCM] ✅ Successfully sent to token: ${token.substring(0, 20)}...`);
 				} else {
-					console.warn(`[FCM] Failed to send to token: ${token.substring(0, 20)}...`);
+					console.warn(`[FCM] ❌ Failed to send to token: ${token.substring(0, 20)}...`);
 				}
+			} else {
+				console.warn(`[FCM] Invalid token record for user ${userId}:`, tokenRecord);
 			}
 		}
 
@@ -115,19 +123,39 @@ const LOG_WINDOW_MIN = 60;
 const SYMPTOM_WINDOW_MIN = 60;
 
 export async function GET(req: Request) {
+	console.log("[PING] Starting ping request processing...");
+	
 	const authHeader = req.headers.get("authorization");
 	const signature = req.headers.get("x-signature");
 	const timestamp = req.headers.get("x-timestamp");
 
-	const token = process.env.PING_BEARER_TOKEN!;
-	const signingSecret = process.env.PING_SIGNING_SECRET!;
+	const token = process.env.PING_BEARER_TOKEN;
+	const signingSecret = process.env.PING_SIGNING_SECRET;
+
+	// Enhanced environment variable checking
+	if (!token) {
+		console.error("[PING] PING_BEARER_TOKEN environment variable is not set");
+		return NextResponse.json({ error: "Server configuration error: Missing bearer token" }, { status: 500 });
+	}
+
+	if (!signingSecret) {
+		console.error("[PING] PING_SIGNING_SECRET environment variable is not set");
+		return NextResponse.json({ error: "Server configuration error: Missing signing secret" }, { status: 500 });
+	}
+
+	// Enhanced authentication logging
+	console.log("[PING] Auth header present:", !!authHeader);
+	console.log("[PING] Signature present:", !!signature);
+	console.log("[PING] Timestamp present:", !!timestamp);
 
 	if (authHeader !== `Bearer ${token}`) {
-		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		console.warn("[PING] Invalid bearer token provided");
+		return NextResponse.json({ error: "Unauthorized: Invalid bearer token" }, { status: 401 });
 	}
 
 	const nowSec = Math.floor(Date.now() / 1000);
 	if (!timestamp || Math.abs(nowSec - parseInt(timestamp)) > 60) {
+		console.warn("[PING] Stale or missing timestamp. Now:", nowSec, "Provided:", timestamp);
 		return NextResponse.json({ error: "Stale timestamp" }, { status: 400 });
 	}
 
@@ -136,39 +164,56 @@ export async function GET(req: Request) {
 		.update(timestamp)
 		.digest("hex");
 	if (signature !== expected) {
+		console.warn("[PING] Invalid signature. Expected:", expected, "Received:", signature);
 		return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
 	}
 
-	const settings = await getAllReminderSettingsForServiceRequest({
-		headers: req.headers,
-	});
-	const nowUtc = new Date();
+	console.log("[PING] Authentication successful");
 
-	let sentLog = 0;
-	let sentSymptom = 0;
+	console.log("[PING] Authentication successful");
 
-	for (const s of settings) {
-		const userId = (s as any).userId as string;
-		const tz = ((s as any).timezone as string) || "UTC";
+	try {
+		const settings = await getAllReminderSettingsForServiceRequest({
+			headers: req.headers,
+		});
+		
+		console.log(`[PING] Found ${settings.length} reminder settings to process`);
+		
+		const nowUtc = new Date();
+		console.log(`[PING] Current UTC time: ${nowUtc.toISOString()}`);
 
-		// Current local time (minutes since local midnight)
-		const nowLocal = getLocalParts(nowUtc, tz);
-		const nowMinLocal = nowLocal.hour * 60 + nowLocal.minute;
+		let sentLog = 0;
+		let sentSymptom = 0;
 
-		// Local windows from settings
-		const logStartMin = hhmmToMinutes(normalizeTime((s as any).logReminderTime ?? "20:00"));
-		const logDuration = LOG_WINDOW_MIN;
-		const logEndMin = (logStartMin + logDuration) % (24 * 60);
+		for (const s of settings) {
+			const userId = (s as any).userId as string;
+			const tz = ((s as any).timezone as string) || "UTC";
 
-		const symptomStartMin = hhmmToMinutes(normalizeTime((s as any).symptomCheckTime ?? "22:00"));
-		const symptomDuration = SYMPTOM_WINDOW_MIN;
-		const symptomEndMin = (symptomStartMin + symptomDuration) % (24 * 60);
+			console.log(`[PING] Processing user ${userId} in timezone ${tz}`);
 
-		// Compute user's local day bounds in UTC using timezone-aware offset
-		const localMidnightBaseUtc = new Date(Date.UTC(nowLocal.year, nowLocal.month - 1, nowLocal.day, 0, 0, 0));
-		const localMidnightOffset = getLocalParts(localMidnightBaseUtc, tz).offsetMin;
-		const startUtc = new Date(localMidnightBaseUtc.getTime() - localMidnightOffset * 60000);
-		const endUtc = new Date(startUtc.getTime() + 24 * 60 * 60000 - 1);
+			// Current local time (minutes since local midnight)
+			const nowLocal = getLocalParts(nowUtc, tz);
+			const nowMinLocal = nowLocal.hour * 60 + nowLocal.minute;
+
+			console.log(`[PING] User ${userId} local time: ${nowLocal.hour}:${String(nowLocal.minute).padStart(2, '0')} (${nowMinLocal} minutes)`);
+
+			// Local windows from settings
+			const logStartMin = hhmmToMinutes(normalizeTime((s as any).logReminderTime ?? "20:00"));
+			const logDuration = LOG_WINDOW_MIN;
+			const logEndMin = (logStartMin + logDuration) % (24 * 60);
+
+			const symptomStartMin = hhmmToMinutes(normalizeTime((s as any).symptomCheckTime ?? "22:00"));
+			const symptomDuration = SYMPTOM_WINDOW_MIN;
+			const symptomEndMin = (symptomStartMin + symptomDuration) % (24 * 60);
+
+			console.log(`[PING] User ${userId} log window: ${minutesToHhmm(logStartMin)} - ${minutesToHhmm(logEndMin)}`);
+			console.log(`[PING] User ${userId} symptom window: ${minutesToHhmm(symptomStartMin)} - ${minutesToHhmm(symptomEndMin)}`);
+
+			// Compute user's local day bounds in UTC using timezone-aware offset
+			const localMidnightBaseUtc = new Date(Date.UTC(nowLocal.year, nowLocal.month - 1, nowLocal.day, 0, 0, 0));
+			const localMidnightOffset = getLocalParts(localMidnightBaseUtc, tz).offsetMin;
+			const startUtc = new Date(localMidnightBaseUtc.getTime() - localMidnightOffset * 60000);
+			const endUtc = new Date(startUtc.getTime() + 24 * 60 * 60000 - 1);
 
 		// Load or create today's check-in
 		const existing = await getDailyCheckInByUserDateRangeForServiceRequest({
@@ -200,7 +245,14 @@ export async function GET(req: Request) {
 			const alreadyLogged = !!(record as any)?.hasLoggedTriggers;
 			const alreadySent = !!(record as any)?.logReminderSent;
 
+			console.log(`[PING] User ${userId} log reminder check:`);
+			console.log(`  - Enabled: ${!!(s as any).dailyLogReminder}`);
+			console.log(`  - In window: ${inWindow}`);
+			console.log(`  - Already logged: ${alreadyLogged}`);
+			console.log(`  - Already sent: ${alreadySent}`);
+
 			if (inWindow && !alreadyLogged && !alreadySent) {
+				console.log(`[PING] Sending log reminder to user ${userId}`);
 				const windowLabel = formatLocalWindowLabel(logStartMin, logEndMin);
 				const pushPayload: PushPayload = {
 					title: "🍽️ Time to log your food!",
@@ -221,8 +273,15 @@ export async function GET(req: Request) {
 						payload: { logReminderSent: true },
 					});
 					sentLog++;
+					console.log(`[PING] ✅ Log reminder sent successfully to user ${userId}`);
+				} else {
+					console.log(`[PING] ❌ Failed to send log reminder to user ${userId}`);
 				}
+			} else {
+				console.log(`[PING] Skipping log reminder for user ${userId} (conditions not met)`);
 			}
+		} else {
+			console.log(`[PING] Log reminders disabled for user ${userId}`);
 		}
 
 		// Symptom Reminder
@@ -231,7 +290,14 @@ export async function GET(req: Request) {
 			const alreadyLogged = !!(record as any)?.hasLoggedSymptoms;
 			const alreadySent = !!(record as any)?.symptomReminderSent;
 
+			console.log(`[PING] User ${userId} symptom reminder check:`);
+			console.log(`  - Enabled: ${!!(s as any).symptomCheckReminder}`);
+			console.log(`  - In window: ${inWindow}`);
+			console.log(`  - Already logged: ${alreadyLogged}`);
+			console.log(`  - Already sent: ${alreadySent}`);
+
 			if (inWindow && !alreadyLogged && !alreadySent) {
+				console.log(`[PING] Sending symptom reminder to user ${userId}`);
 				const windowLabel = formatLocalWindowLabel(symptomStartMin, symptomEndMin);
 				const pushPayload: PushPayload = {
 					title: "💭 Time for your daily reflection!",
@@ -252,10 +318,19 @@ export async function GET(req: Request) {
 						payload: { symptomReminderSent: true },
 					});
 					sentSymptom++;
+					console.log(`[PING] ✅ Symptom reminder sent successfully to user ${userId}`);
+				} else {
+					console.log(`[PING] ❌ Failed to send symptom reminder to user ${userId}`);
 				}
+			} else {
+				console.log(`[PING] Skipping symptom reminder for user ${userId} (conditions not met)`);
 			}
+		} else {
+			console.log(`[PING] Symptom reminders disabled for user ${userId}`);
 		}
 	}
+
+	console.log(`[PING] Processing complete. Sent ${sentLog} log reminders and ${sentSymptom} symptom reminders`);
 
 	return NextResponse.json({
 		success: true,
@@ -268,4 +343,12 @@ export async function GET(req: Request) {
 		timestamp: new Date().toISOString(),
 		method: "fcm_push_notifications"
 	});
+	} catch (error) {
+		console.error("[PING] Error processing ping request:", error);
+		return NextResponse.json({
+			success: false,
+			error: "Internal server error",
+			details: error instanceof Error ? error.message : "Unknown error"
+		}, { status: 500 });
+	}
 }
