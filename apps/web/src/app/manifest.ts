@@ -9,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		scope: "/",
 		display: "standalone",
 		display_override: ["window-controls-overlay"],
-		background_color: "#00000000",
-		theme_color: "#ffffff",
+		background_color: "#ffffff",
+		theme_color: "#00000000",
 		icons: [
 			{ src: "/icons/ahara-192.png", sizes: "192x192", type: "image/png" },
 			{ src: "/icons/ahara-512.png", sizes: "512x512", type: "image/png" },
