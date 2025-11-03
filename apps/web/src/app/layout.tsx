@@ -5,6 +5,9 @@ import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/blocks/Footer";
 import Header from "@/components/blocks/Header";
 import Providers from "@/components/providers/Providers";
+import TitleBarOverlay from "@/components/blocks/TitleBarOverlay";
+
+
 
 // const geistSans = Geist({
 // 	variable: "--font-geist-sans",
@@ -47,6 +50,8 @@ export default function RootLayout({
 				className={`${outfit.variable} ${plusJakartaSans.variable} antialiased`}
 			>
 				<Providers>
+					{/* Title bar overlay (draggable, native-like) */}
+					<TitleBarOverlay />
 					<div className="grid h-svh grid-rows-[auto_1fr]">
 						<Header />
 						{children}

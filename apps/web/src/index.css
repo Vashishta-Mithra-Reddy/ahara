@@ -181,3 +181,40 @@ body {
 		@apply flex flex-col items-center justify-center;
 	}
 }
+
+/* Title bar overlay — positions inside OS titlebar area and enables window drag */
+.titlebar {
+  position: fixed;
+  left: env(titlebar-area-x, 0);
+  top: env(titlebar-area-y, 0);
+  height: env(titlebar-area-height, 0px);
+  width: env(titlebar-area-width, 100%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  padding-inline: 12px;
+  background: transparent;
+  app-region: drag;
+  -webkit-app-region: drag;
+}
+
+/* Content avoids overlay area where system controls live (left/right depending on OS) */
+.titlebar-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: var(--overlay-right-inset, 0px);
+  padding-left: var(--overlay-left-inset, 0px);
+}
+
+/* Interactive elements inside the titlebar must be no-drag so they remain clickable */
+.titlebar .no-drag {
+  app-region: no-drag;
+  -webkit-app-region: no-drag;
+}
+
+/* Keep app content clear of the title bar area when overlay isn't visible */
+body {
+  padding-top: env(titlebar-area-height, 0px);
+}
