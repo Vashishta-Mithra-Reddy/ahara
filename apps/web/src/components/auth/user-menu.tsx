@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, User } from "lucide-react";
+import { LayoutDashboard, LogOut, LucideForkKnifeCrossed, SunMoon, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -50,12 +50,12 @@ export default function UserMenu({ className }: { className?: string }) {
 				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
-				className="w-56 border bg-card shadow-lg font-jakarta"
+				className="w-56 border-2 border-foreground/10 dark:border-foreground/10 bg-card font-jakarta"
 				align="end"
 			>
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
-						<p className="font-medium text-sm leading-none line-clamp-1">
+						<p className="font-medium text-sm leading-none line-clamp-1 text-foreground/90">
 							{session.user.name}
 						</p>
 						<p className="truncate text-muted-foreground text-xs leading-none line-clamp-1">
@@ -65,8 +65,18 @@ export default function UserMenu({ className }: { className?: string }) {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem className="cursor-pointer text-foreground/90 focus:text-foreground">
-					<LayoutDashboard className="mr-2 size-4" />
+					<LayoutDashboard className="size-4" />
 					<Link href="/dashboard">Dashboard</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem className="cursor-pointer text-foreground/90 focus:text-foreground">
+					<LucideForkKnifeCrossed className="size-4" />
+					<Link href="/dashboard/food-log">Food Log</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem className="cursor-pointer text-foreground/90 focus:text-foreground">
+					<SunMoon className="size-4" />
+					<Link href="/dashboard/reflection">Daily Reflection</Link>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
@@ -81,7 +91,7 @@ export default function UserMenu({ className }: { className?: string }) {
 						});
 					}}
 				>
-					<LogOut className="mr-2 size-4" />
+					<LogOut className="size-4 text-destructive" />
 					<span>Sign Out</span>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

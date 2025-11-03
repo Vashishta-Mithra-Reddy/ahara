@@ -87,7 +87,7 @@ body {
      * For accessibility, it's highly recommended to keep a warning color.
      * Consider using the original red: --destructive: oklch(0.6 0.15 25);
     */
-    --destructive: oklch(0.6 0 0); /* Neutral gray for destructive actions */
+    --destructive: oklch(0.6 0.15 25); /* Neutral gray for destructive actions */
     --destructive-foreground: oklch(0.98 0 0);
 
     --border: oklch(0.35 0 0);
