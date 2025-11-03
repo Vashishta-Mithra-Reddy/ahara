@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/blocks/Footer";
 import Header from "@/components/blocks/Header";
 import Providers from "@/components/providers/Providers";
-import TitleBarOverlay from "@/components/blocks/TitleBarOverlay";
+// import TitleBarOverlay from "@/components/blocks/TitleBarOverlay";
 
 
 
@@ -51,7 +51,7 @@ export default function RootLayout({
 			>
 				<Providers>
 					{/* Title bar overlay (draggable, native-like) */}
-					<TitleBarOverlay />
+					{/* <TitleBarOverlay /> */}
 					<div className="grid h-svh grid-rows-[auto_1fr]">
 						<Header />
 						{children}
