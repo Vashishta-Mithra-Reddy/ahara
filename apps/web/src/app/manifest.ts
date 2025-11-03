@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		short_name: "ahara",
 		description: "Trigger Analyzer",
 		start_url: "/",
-		display: "standalone",
+		display: "fullscreen",
 		background_color: "#ffffff",
 		theme_color: "#2e2e2e",
 		icons: [
