@@ -38,12 +38,14 @@ export default function Header() {
 	];
 
 	return (
-		<header className="border-b-2 border-dashed px-6 md:px-12 py-4 font-outfit text-gray-600 dark:text-foreground">
+		<header
+			className={`border-b-0 px-6 md:px-12 py-4 font-outfit text-gray-600 dark:text-foreground ${isDashboard ? "border-b-2 border-border/20" : ""}`}
+		>
 			<div className="flex flex-row items-center justify-between">
 				{/* Logo / Home link */}
 				<Link
 					href="/"
-					className="font-medium font-outfit text-3xl text-glow text-gray-500 dark:text-foreground pr-12"
+					className="font-medium font-outfit text-3xl dark:text-foreground pr-12"
 				>
 					āhāra
 				</Link>
@@ -60,8 +62,8 @@ export default function Header() {
 									className={`relative px-6 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
 										${
 											isActive
-												? "text-primary bg-gray-200 dark:bg-gray-800"
-												: "text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700"
+												? "text-foreground/80 bg-[#2e2e2e]/20 dark:bg-[#2e2e2e]"
+												: "text-foreground/70 hover:text-foreground/80 hover:bg-[#2e2e2e]/10 dark:hover:bg-[#2e2e2e]/70"
 										}`}
 								>
 									{label}

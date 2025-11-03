@@ -18,7 +18,8 @@ export default function Hero() {
 					transition={{ duration: 0.5, delay: 0.4 }}
 					className="text-center font-medium font-outfit text-5xl text-white"
 				>
-					Track how <span className="text-glow brightness-200">stuff</span> affects you
+					Track how <span className="text-glow brightness-200">stuff</span>{" "}
+					affects you
 				</motion.h1>
 				<motion.div
 					initial={{ opacity: 0, y: 40, filter: "blur(5px)" }}

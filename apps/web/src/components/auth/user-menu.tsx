@@ -64,9 +64,7 @@ export default function UserMenu({ className }: { className?: string }) {
 					</div>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem
-					className="cursor-pointer text-foreground/90 focus:text-foreground"
-				>
+				<DropdownMenuItem className="cursor-pointer text-foreground/90 focus:text-foreground">
 					<LayoutDashboard className="mr-2 size-4" />
 					<Link href="/dashboard">Dashboard</Link>
 				</DropdownMenuItem>

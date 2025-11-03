@@ -15,6 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Plus, X, CheckCircle, Activity } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -203,7 +210,7 @@ export default function Onboarding() {
 						</h1>
 					</div>
 					<p className="text-md md:text-xl text-muted-foreground max-w-2xl mx-auto">
-						Let's personalize your tracking and pattern analysis experience.
+						{/* Let's personalize your tracking and pattern analysis experience. */}
 						Choose what you'd like to monitor and we'll help you discover
 						meaningful insights.
 					</p>
@@ -302,20 +309,23 @@ export default function Onboarding() {
 									<Label htmlFor="custom-category" className="text-sm mb-2">
 										Category
 									</Label>
-									<select
-										id="custom-category"
+									<Select
 										value={newCustomItem.category}
-										onChange={(e) =>
+										onValueChange={(value) =>
 											setNewCustomItem({
 												...newCustomItem,
-												category: e.target.value,
+												category: value,
 											})
 										}
-										className="w-full h-9 px-3 py-1 text-sm border border-input rounded-md bg-background"
 									>
-										<option value="metric">Metric</option>
-										<option value="symptom">Symptom</option>
-									</select>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="Select a category" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="metric">Metric</SelectItem>
+											<SelectItem value="symptom">Symptom</SelectItem>
+										</SelectContent>
+									</Select>
 								</div>
 								<div>
 									<Label htmlFor="custom-description" className="text-sm mb-2">
@@ -334,8 +344,12 @@ export default function Onboarding() {
 									/>
 								</div>
 								<div className="flex items-end">
-									<Button onClick={addCustomItem} size="sm" className="w-full">
-										<Plus className="h-4 w-4 mr-1" />
+									<Button
+										onClick={addCustomItem}
+										size="sm"
+										className="w-full py-3"
+									>
+										<Plus className="h-4 w-4" />
 										Add
 									</Button>
 								</div>
@@ -419,7 +433,7 @@ export default function Onboarding() {
 											</>
 										) : (
 											<>
-												<CheckCircle className="h-4 w-4 mr-2" />
+												<CheckCircle className="h-4 w-4" />
 												Complete Setup & Go to Dashboard
 											</>
 										)}

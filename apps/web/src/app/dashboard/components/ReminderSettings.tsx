@@ -53,7 +53,10 @@ export default function ReminderSettings() {
 							dailyLogReminder: !!record.dailyLogReminder,
 							symptomCheckReminder: !!record.symptomCheckReminder,
 							logReminderTime: (record.logReminderTime ?? "20:00").slice(0, 5),
-							symptomCheckTime: (record.symptomCheckTime ?? "22:00").slice(0, 5),
+							symptomCheckTime: (record.symptomCheckTime ?? "22:00").slice(
+								0,
+								5,
+							),
 							timezone: record.timezone ?? defaultTz,
 						});
 					}

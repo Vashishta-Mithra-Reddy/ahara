@@ -60,7 +60,9 @@ export default function ReflectionPage() {
 			<div className="flex items-center justify-between pb-4">
 				<div>
 					<h1 className="text-2xl font-bold">Daily Reflection</h1>
-					<p className="text-muted-foreground">Reflect on your day and track your wellbeing</p>
+					<p className="text-muted-foreground">
+						Reflect on your day and track your wellbeing
+					</p>
 				</div>
 			</div>
 			<section className="w-full flex items-center justify-center">

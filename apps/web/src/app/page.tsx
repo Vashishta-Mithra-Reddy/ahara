@@ -7,12 +7,12 @@ import SetupProcess from "@/components/home/SetupProcess";
 export default function Home() {
 	return (
 		<div className="mx-auto w-full">
-			<div className="px-4 py-4">
-			<Hero />
+			<div className="px-4 py-4 pt-0">
+				<Hero />
 			</div>
 
 			{/* <Features /> */}
-			
+
 			<SetupProcess />
 			{/* <Benefits /> */}
 			<CallToAction />

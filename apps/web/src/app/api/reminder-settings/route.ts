@@ -35,7 +35,9 @@ export async function POST(request: NextRequest) {
 		const existingRows = await getReminderSettingsByUserForRequest({
 			headers: requestHeaders,
 		});
-		const existing = Array.isArray(existingRows) ? existingRows[0] : existingRows;
+		const existing = Array.isArray(existingRows)
+			? existingRows[0]
+			: existingRows;
 
 		const payload = {
 			timezone: body.timezone,

@@ -58,13 +58,14 @@ export default function ReflectionTab({
 							<p className="text-sm text-muted-foreground mb-4">
 								Take a moment to check in with yourself and how you're feeling
 							</p>
+							<div className="flex-center mt-1">
 							<Button
 								onClick={() => setShowReflection(true)}
-								className="bg-primary hover:bg-primary/90 transition-colors"
 							>
 								<Moon className="h-4 w-4 mr-2" />
 								Start Daily Reflection
 							</Button>
+							</div>
 						</div>
 					) : (
 						<div className="space-y-6">

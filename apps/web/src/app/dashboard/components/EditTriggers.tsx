@@ -13,6 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, X, Activity } from "lucide-react";
 
@@ -111,7 +118,9 @@ export default function EditTriggers() {
 			});
 			if (!createRes.ok) throw new Error("Failed to create tracking item");
 			const createdRaw = await createRes.json();
-			const createdItem = Array.isArray(createdRaw) ? createdRaw[0] : createdRaw;
+			const createdItem = Array.isArray(createdRaw)
+				? createdRaw[0]
+				: createdRaw;
 			if (!createdItem?.id) throw new Error("Invalid tracking item response");
 
 			// Create the user's selection for the newly created item
@@ -126,8 +135,11 @@ export default function EditTriggers() {
 			});
 			if (!selectRes.ok) throw new Error("Failed to create selection");
 			const selectionRaw = await selectRes.json();
-			const selection = Array.isArray(selectionRaw) ? selectionRaw[0] : selectionRaw;
-			if (!selection?.trackingItemId) throw new Error("Invalid selection response");
+			const selection = Array.isArray(selectionRaw)
+				? selectionRaw[0]
+				: selectionRaw;
+			if (!selection?.trackingItemId)
+				throw new Error("Invalid selection response");
 
 			setSelectionsByItemId((prev) => ({
 				...prev,
@@ -246,9 +258,9 @@ export default function EditTriggers() {
 								{defaultItems.map((item) => (
 									<div
 										key={item.id}
-										className={`p-4 border rounded-lg cursor-pointer transition-all ${
+										className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 ${
 											selectedItems.has(item.id)
-												? "border-primary bg-primary/5 shadow-sm"
+												? "border-foreground/25 bg-foreground/5 shadow-sm"
 												: "border-border"
 										}`}
 										onClick={() => handleItemToggle(item.id)}
@@ -299,20 +311,23 @@ export default function EditTriggers() {
 									<Label htmlFor="custom-category" className="text-sm mb-2">
 										Category
 									</Label>
-									<select
-										id="custom-category"
+									<Select
 										value={newCustomItem.category}
-										onChange={(e) =>
+										onValueChange={(value) =>
 											setNewCustomItem({
 												...newCustomItem,
-												category: e.target.value,
+												category: value,
 											})
 										}
-										className="w-full h-9 px-3 py-1 text-sm border border-input rounded-md bg-background"
 									>
-										<option value="metric">Metric</option>
-										<option value="symptom">Symptom</option>
-									</select>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="Select category" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="metric">Metric</SelectItem>
+											<SelectItem value="symptom">Symptom</SelectItem>
+										</SelectContent>
+									</Select>
 								</div>
 								<div>
 									<Label htmlFor="custom-description" className="text-sm mb-2">
@@ -331,7 +346,7 @@ export default function EditTriggers() {
 									/>
 								</div>
 								<div className="flex items-end">
-									<Button onClick={addCustomItem} size="sm" className="w-full">
+									<Button onClick={addCustomItem} size="sm" className="w-full py-3">
 										<Plus className="h-4 w-4 mr-1" />
 										Add
 									</Button>

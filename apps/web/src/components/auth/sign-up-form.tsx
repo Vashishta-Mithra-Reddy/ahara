@@ -66,13 +66,15 @@ export default function SignUpForm({
 	}
 
 	return (
-		<div className="w-full max-w-md p-6 font-jakarta">
-			<h1 className="text-center font-semibold text-3xl font-outfit">
-				Let's get you <span className="tracking-normal">started!</span>
-			</h1>
-			<p className="text-center text-muted-foreground/80 mb-6 font-semibold tracking-tight">
-				Your first step to understand yourself better.
-			</p>
+		<div className="w-full max-w-md font-jakarta">
+			<div className="">
+				<h1 className="text-center font-semibold text-3xl font-outfit">
+					Let's get you <span className="tracking-normal">started!</span>
+				</h1>
+				<p className="text-center text-muted-foreground/80 font-semibold tracking-tight">
+					Your first step to understand yourself better.
+				</p>
+			</div>
 
 			<form
 				onSubmit={(e) => {
@@ -80,7 +82,7 @@ export default function SignUpForm({
 					e.stopPropagation();
 					form.handleSubmit();
 				}}
-				className="space-y-4"
+				className="space-y-4 p-6"
 			>
 				<div>
 					<form.Field name="name">
@@ -169,10 +171,10 @@ export default function SignUpForm({
 				</form.Subscribe>
 			</form>
 
-			<div className="mt-4 flex-center text-center">
+			<div className="flex-center text-center">
 				<div
 					onClick={onSwitchToSignIn}
-					className="text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer font-jakarta decoration-wavy "
+					className="text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer font-jakarta underline-offset-1"
 				>
 					Already have an account? Sign In
 				</div>

@@ -3,6 +3,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import OverviewTab from "@/app/dashboard/components/OverviewTab";
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 // Types
 type FoodEntry = {
@@ -36,9 +39,12 @@ type TrackingItem = {
 export default function OverviewPage() {
 	const { data: session } = authClient.useSession();
 	const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	// State
-	const [userTrackingItems, setUserTrackingItems] = useState<TrackingItem[]>([]);
+	const [userTrackingItems, setUserTrackingItems] = useState<TrackingItem[]>(
+		[],
+	);
 	const [todaysFoodEntries, setTodaysFoodEntries] = useState<FoodEntry[]>([]);
 	const [reflection, setReflection] = useState<DailyReflection>({
 		overallFeeling: 5,
@@ -89,9 +95,18 @@ export default function OverviewPage() {
 	}, [today]);
 
 	// Refresh data
-	const refreshData = useCallback(() => {
-		fetchUserTrackingItems();
-		fetchTodaysReflection();
+	const refreshData = useCallback(async () => {
+		setIsRefreshing(true);
+		try {
+			await Promise.all([
+				fetchUserTrackingItems(),
+				fetchTodaysReflection()
+			]);
+		} catch (error) {
+			console.error("Error refreshing data:", error);
+		} finally {
+			setIsRefreshing(false);
+		}
 	}, [fetchUserTrackingItems, fetchTodaysReflection]);
 
 	// Load data on mount
@@ -106,15 +121,27 @@ export default function OverviewPage() {
 			<div className="flex items-center justify-between pb-4">
 				<div>
 					<h1 className="text-2xl font-bold">
-						Hey {session?.user?.name ? ` ${session.user.name}` : ""}, How was your day?
+						Hey {session?.user?.name ? ` ${session.user.name}` : "Human"}, How was
+						your day?
 					</h1>
 				</div>
-				<button
-					className="px-4 py-2 text-sm rounded-md border hover:bg-muted transition-colors"
+				<Button
+					className="px-3 py-3 text-sm rounded-md border"
 					onClick={refreshData}
+					disabled={isRefreshing}
 				>
-					Refresh
-				</button>
+					<motion.div
+						animate={{ rotate: isRefreshing ? 360 : 0 }}
+						transition={{
+							duration: 1,
+							ease: "easeInOut",
+							repeat: isRefreshing ? Infinity : 0,
+							repeatType: "loop"
+						}}
+					>
+						<RefreshCw className="w-6 h-6" />
+					</motion.div>
+				</Button>
 			</div>
 			<section className="w-full flex items-center justify-center">
 				<div className="w-full">

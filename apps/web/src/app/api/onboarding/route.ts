@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
 		const session = await auth.api.getSession({
 			headers: requestHeaders,
 		});
-	
 
 		if (!session?.user) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -59,7 +58,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		const requestHeaders = await headers();
-		
+
 		// Use Better Auth's updateUser function
 		const updateData: any = {};
 		if (completed !== undefined) {
@@ -78,7 +77,10 @@ export async function POST(request: NextRequest) {
 		});
 
 		if (!result) {
-			return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+			return NextResponse.json(
+				{ error: "Failed to update user" },
+				{ status: 500 },
+			);
 		}
 
 		// Auto-populate default reminder settings if onboarding completed and none exist
@@ -147,7 +149,7 @@ export async function PUT(request: NextRequest) {
 		}
 
 		const requestHeaders = await headers();
-		
+
 		// Use Better Auth's updateUser function
 		const updateData: any = {};
 		if (completed !== undefined) {
@@ -166,7 +168,10 @@ export async function PUT(request: NextRequest) {
 		});
 
 		if (!result) {
-			return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+			return NextResponse.json(
+				{ error: "Failed to update user" },
+				{ status: 500 },
+			);
 		}
 
 		// Auto-populate defaults on update when completed flips to true

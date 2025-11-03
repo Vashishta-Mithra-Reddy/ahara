@@ -61,7 +61,7 @@ body {
 }
 
 .dark {
-    --background: oklch(0.15 0 0); /* Deep neutral charcoal */
+    --background: oklch(0.15 0 0); 
     --foreground: oklch(0.98 0 0); /* Almost pure white */
 
     --card: oklch(0.18 0 0); /* Slightly lifted from background */

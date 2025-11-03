@@ -24,7 +24,8 @@ export default function CallToAction() {
 								transition={{ duration: 0.6, delay: 0.3 }}
 								className="font-outfit text-3xl md:text-4xl font-semibold text-foreground mb-4"
 							>
-								Ready to Discover What <span className="text-glow">Works</span> for Your Body?
+								Ready to Discover What <span className="text-glow">Works</span>{" "}
+								for Your Body?
 							</motion.h2>
 
 							<motion.p
@@ -44,12 +45,13 @@ export default function CallToAction() {
 								transition={{ duration: 0.6, delay: 0.5 }}
 								className="flex flex-col gap-4 justify-center items-center"
 							>
-								<AuthButton className="bg-primary text-primary-foreground hover:bg-primary/90 border-primary/40" />
-								
-								<div className="flex items-center gap-2 text-sm text-muted-foreground">
-									{/* <ArrowRight className="w-4 h-4" /> */}
+								<AuthButton className="border-primary/40 text-primary hover:bg-primary/10 hover:text-primary/90"/>
+
+								{/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
+									<ArrowRight className="w-4 h-4" />
 									Free to start • No credit card required
-								</div>
+								</div> */}
+								
 							</motion.div>
 
 							{/* <motion.div

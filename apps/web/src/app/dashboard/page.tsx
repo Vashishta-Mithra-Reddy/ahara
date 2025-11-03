@@ -15,10 +15,10 @@ export default async function DashboardPage() {
 	// }
 
 	return (
-		<Suspense fallback={<Spinner/>}>
-		<ProtectedRoute requireOnboarding={true}>
-			<Dashboard />
-		</ProtectedRoute>
+		<Suspense fallback={<Spinner />}>
+			<ProtectedRoute requireOnboarding={true}>
+				<Dashboard />
+			</ProtectedRoute>
 		</Suspense>
 	);
 }

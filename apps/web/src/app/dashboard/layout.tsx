@@ -7,9 +7,7 @@ export default function DashboardLayout({
 }) {
 	return (
 		<ProtectedRoute requireOnboarding={true}>
-			<div className="space-y-6 wrapperx font-jakarta w-full">
-					{children}
-			</div>
+			<div className="space-y-6 wrapperx font-jakarta w-full">{children}</div>
 		</ProtectedRoute>
 	);
 }

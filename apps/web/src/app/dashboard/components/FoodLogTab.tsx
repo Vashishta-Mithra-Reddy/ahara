@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Plus, Utensils } from "lucide-react";
 
 interface FoodEntry {
@@ -60,22 +67,26 @@ export default function FoodLogTab({
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label className="text-sm font-medium mb-2 block">Type</label>
-							<select
+							<Select
 								value={newEntry.type}
-								onChange={(e) =>
+								onValueChange={(value) =>
 									setNewEntry({
 										...newEntry,
-										type: e.target.value as NewEntry["type"],
+										type: value as NewEntry["type"],
 									})
 								}
-								className="w-full p-2 border rounded-md bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
 							>
-								<option value="breakfast">🌅 Breakfast</option>
-								<option value="lunch">🍽️ Lunch</option>
-								<option value="dinner">🌙 Dinner</option>
-								<option value="snack">🍿 Snack</option>
-								<option value="drink">🥤 Drink</option>
-							</select>
+								<SelectTrigger className="w-full">
+									<SelectValue placeholder="Select meal type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="breakfast">🌅 Breakfast</SelectItem>
+									<SelectItem value="lunch">🍽️ Lunch</SelectItem>
+									<SelectItem value="dinner">🌙 Dinner</SelectItem>
+									<SelectItem value="snack">🍿 Snack</SelectItem>
+									<SelectItem value="drink">🥤 Drink</SelectItem>
+								</SelectContent>
+							</Select>
 						</div>
 						<div>
 							<label className="text-sm font-medium mb-2 block">
@@ -108,10 +119,10 @@ export default function FoodLogTab({
 					</div>
 					<Button
 						onClick={addFoodEntry}
-						className="w-full bg-primary hover:bg-primary/90 transition-colors"
+						className="w-full "
 						disabled={!newEntry.description.trim()}
 					>
-						<Plus className="h-4 w-4 mr-2" />
+						<Plus className="h-4 w-4" />
 						Add Entry
 					</Button>
 				</CardContent>
@@ -141,6 +152,7 @@ export default function FoodLogTab({
 							<p className="text-sm mb-4">
 								Log your first meal to begin tracking your eating patterns
 							</p>
+							<div className="flex-center">
 							<Button
 								variant="outline"
 								onClick={() => {
@@ -149,11 +161,12 @@ export default function FoodLogTab({
 									) as HTMLInputElement;
 									input?.focus();
 								}}
-								className="text-sm"
+								className="text-sm mt-1"
 							>
 								<Plus className="h-4 w-4 mr-2" />
 								Add your first entry
 							</Button>
+							</div>
 						</div>
 					) : (
 						<div className="space-y-3">

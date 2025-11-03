@@ -9,10 +9,8 @@ import { PostHogProvider } from "./Posthog";
 export default function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-			<PostHogProvider>
-			{children}
-			</PostHogProvider>
-			<Toaster position="top-center" richColors />
+			<PostHogProvider>{children}</PostHogProvider>
+			<Toaster position="top-center" />
 			<ServiceWorkerRegister />
 			<PushNotificationsInit />
 		</ThemeProvider>

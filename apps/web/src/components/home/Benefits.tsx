@@ -7,39 +7,45 @@ const benefits = [
 	{
 		icon: Heart,
 		title: "Improve Your Health",
-		description: "Identify food sensitivities, optimize nutrition, and feel better every day.",
-		stats: "92% report improved well-being"
+		description:
+			"Identify food sensitivities, optimize nutrition, and feel better every day.",
+		stats: "92% report improved well-being",
 	},
 	{
 		icon: Zap,
 		title: "Boost Energy Levels",
-		description: "Discover which foods give you sustained energy and which ones drain you.",
-		stats: "Average 40% energy increase"
+		description:
+			"Discover which foods give you sustained energy and which ones drain you.",
+		stats: "Average 40% energy increase",
 	},
 	{
 		icon: TrendingUp,
 		title: "Track Progress",
-		description: "Visualize your health journey with detailed analytics and insights.",
-		stats: "See results in 2-3 weeks"
+		description:
+			"Visualize your health journey with detailed analytics and insights.",
+		stats: "See results in 2-3 weeks",
 	},
 	{
 		icon: Clock,
 		title: "Save Time",
-		description: "Quick logging and automated insights save hours of manual tracking.",
-		stats: "5 minutes daily logging"
+		description:
+			"Quick logging and automated insights save hours of manual tracking.",
+		stats: "5 minutes daily logging",
 	},
 	{
 		icon: Users,
 		title: "Join Community",
-		description: "Connect with others on similar health journeys and share experiences.",
-		stats: "10,000+ active members"
+		description:
+			"Connect with others on similar health journeys and share experiences.",
+		stats: "10,000+ active members",
 	},
 	{
 		icon: Award,
 		title: "Evidence-Based",
-		description: "Built on scientific research and validated by healthcare professionals.",
-		stats: "Clinically validated approach"
-	}
+		description:
+			"Built on scientific research and validated by healthcare professionals.",
+		stats: "Clinically validated approach",
+	},
 ];
 
 export default function Benefits() {
@@ -57,7 +63,8 @@ export default function Benefits() {
 						Transform Your <span className="text-glow">Health Journey</span>
 					</h2>
 					<p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-						Join thousands of users who have discovered the power of personalized health tracking and achieved their wellness goals.
+						Join thousands of users who have discovered the power of
+						personalized health tracking and achieved their wellness goals.
 					</p>
 				</motion.div>
 
@@ -76,7 +83,7 @@ export default function Benefits() {
 									<div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
 										<benefit.icon className="w-6 h-6 text-primary" />
 									</div>
-									
+
 									<div>
 										<h3 className="font-semibold text-xl text-foreground mb-2">
 											{benefit.title}
@@ -106,7 +113,9 @@ export default function Benefits() {
 					<div className="bg-card border rounded-2xl p-8 max-w-4xl mx-auto">
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 							<div>
-								<div className="text-3xl font-bold text-primary mb-2">10,000+</div>
+								<div className="text-3xl font-bold text-primary mb-2">
+									10,000+
+								</div>
 								<div className="text-muted-foreground">Active Users</div>
 							</div>
 							<div>

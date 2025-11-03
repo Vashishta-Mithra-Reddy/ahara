@@ -44,7 +44,8 @@ export default function SetupProcess() {
 					className="text-center mb-12"
 				>
 					<h2 className="font-outfit text-4xl font-semibold text-foreground mb-4">
-						Get Started in <span className="underline decoration-wavy">Minutes</span>
+						Get Started in{" "}
+						<span className="underline decoration-wavy">Minutes</span>
 					</h2>
 					{/* <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
 						Our streamlined setup process gets you tracking and discovering insights about your health in no time.
@@ -72,7 +73,7 @@ export default function SetupProcess() {
 											{index + 1}
 										</div>
 									</div>
-									
+
 									<div>
 										<h3 className="font-semibold text-lg text-foreground mb-2">
 											{step.title}
@@ -87,7 +88,7 @@ export default function SetupProcess() {
 									</div>
 								</div>
 							</div>
-							
+
 							{/* Connection line */}
 							{index < steps.length - 1 && (
 								<div className="hidden lg:block absolute top-1/2 -right-8 w-8 h-0.5 bg-border transform -translate-y-1/2 z-10">

@@ -13,7 +13,9 @@ type TrackingItem = {
 };
 
 export default function SettingsPage() {
-	const [userTrackingItems, setUserTrackingItems] = useState<TrackingItem[]>([]);
+	const [userTrackingItems, setUserTrackingItems] = useState<TrackingItem[]>(
+		[],
+	);
 
 	// Fetch user-selected tracking items
 	const fetchUserTrackingItems = useCallback(async () => {
@@ -41,7 +43,9 @@ export default function SettingsPage() {
 			<div className="flex items-center justify-between pb-4">
 				<div>
 					<h1 className="text-2xl font-bold">Settings</h1>
-					<p className="text-muted-foreground">Manage your tracking preferences and account settings</p>
+					<p className="text-muted-foreground">
+						Manage your tracking preferences and account settings
+					</p>
 				</div>
 			</div>
 			<section className="w-full flex items-center justify-center">

@@ -1,7 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
-
 // export const authClient = createAuthClient({
 //     plugins: [inferAdditionalFields({
 //       user: {
@@ -19,5 +18,5 @@ import { inferAdditionalFields } from "better-auth/client/plugins";
 import type { auth } from "@ahara/auth";
 
 export const authClient = createAuthClient({
-  plugins: [inferAdditionalFields<typeof auth>()],
+	plugins: [inferAdditionalFields<typeof auth>()],
 });

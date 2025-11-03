@@ -3,13 +3,16 @@ import dynamic from "next/dynamic";
 
 // Dynamically import LiquidMetal to prevent SSR issues
 const LiquidMetal = dynamic(
-	() => import("@paper-design/shaders-react").then((mod) => ({ default: mod.LiquidMetal })),
-	{ ssr: false }
+	() =>
+		import("@paper-design/shaders-react").then((mod) => ({
+			default: mod.LiquidMetal,
+		})),
+	{ ssr: false },
 );
 
 export default function Footer() {
 	return (
-		<footer className="border-t-2 border-dashed px-4 pb-6 pt-4 font-jakarta">
+		<footer className="border-t-0 border-dashed px-4 pb-6 pt-4 font-jakarta">
 			<div className="flex-center">
 				<div className="max-w-7xl flex-col-center">
 					<LiquidMetal

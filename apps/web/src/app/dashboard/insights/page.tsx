@@ -9,7 +9,9 @@ export default function InsightsPage() {
 			<div className="flex items-center justify-between pb-4">
 				<div>
 					<h1 className="text-2xl font-bold">Insights</h1>
-					<p className="text-muted-foreground">Discover patterns and trends in your health data</p>
+					<p className="text-muted-foreground">
+						Discover patterns and trends in your health data
+					</p>
 				</div>
 			</div>
 			<section className="w-full flex items-center justify-center">

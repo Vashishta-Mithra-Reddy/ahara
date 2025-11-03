@@ -30,7 +30,8 @@ type SettingsTabProps = {
 export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 	// Push notifications state
 	const [pushSupported, setPushSupported] = useState(false);
-	const [permission, setPermission] = useState<NotificationPermission>("default");
+	const [permission, setPermission] =
+		useState<NotificationPermission>("default");
 	const [isRegistering, setIsRegistering] = useState(false);
 	const [tokenRegistered, setTokenRegistered] = useState<boolean | null>(null);
 
@@ -58,7 +59,9 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 				const perm = await Notification.requestPermission();
 				setPermission(perm);
 				if (perm !== "granted") {
-					toast.error("Permission denied. Enable notifications from browser settings.");
+					toast.error(
+						"Permission denied. Enable notifications from browser settings.",
+					);
 					return;
 				}
 			}
@@ -67,13 +70,18 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 			const registration = await navigator.serviceWorker.ready;
 			const token = await getWebPushToken(registration);
 			if (!token) {
-				toast.error("Failed to obtain a push token. Please reload and try again.");
+				toast.error(
+					"Failed to obtain a push token. Please reload and try again.",
+				);
 				setTokenRegistered(false);
 				return;
 			}
 
 			// Register token with backend
-			const deviceName = (typeof navigator !== "undefined" && navigator.userAgent) ? navigator.userAgent : "Web";
+			const deviceName =
+				typeof navigator !== "undefined" && navigator.userAgent
+					? navigator.userAgent
+					: "Web";
 			const res = await fetch("/api/push/register", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -105,7 +113,8 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 						Push Notifications
 					</CardTitle>
 					<CardDescription>
-						Enable push notifications to receive timely daily log and symptom check reminders.
+						Enable push notifications to receive timely daily log and symptom
+						check reminders.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
@@ -130,7 +139,8 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 										</>
 									) : (
 										<>
-											<XCircle className="h-4 w-4 text-red-600" /> not registered
+											<XCircle className="h-4 w-4 text-red-600" /> not
+											registered
 										</>
 									)}
 								</p>
@@ -142,7 +152,7 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 								disabled={
 									isRegistering ||
 									!pushSupported ||
-									(permission === "denied") ||
+									permission === "denied" ||
 									(tokenRegistered === true && permission === "granted")
 								}
 							>
@@ -154,13 +164,15 @@ export default function SettingsTab({ userTrackingItems }: SettingsTabProps) {
 							</Button>
 							{permission === "denied" && (
 								<p className="mt-2 text-xs text-muted-foreground">
-									Notifications are blocked. Allow them in your browser’s site settings.
+									Notifications are blocked. Allow them in your browser’s site
+									settings.
 								</p>
 							)}
 						</div>
 					</div>
 					<p className="text-xs text-muted-foreground">
-						We’ll only send reminders you configure below. You can change these times anytime.
+						We’ll only send reminders you configure below. You can change these
+						times anytime.
 					</p>
 				</CardContent>
 			</Card>

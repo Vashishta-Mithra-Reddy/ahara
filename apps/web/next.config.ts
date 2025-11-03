@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
 					},
 					{
 						key: "Access-Control-Allow-Origin",
-						value: "http://localhost:8081/", 
+						value: "http://localhost:8081/",
 					},
 					{
 						key: "Access-Control-Allow-Methods",

@@ -13,8 +13,8 @@ export default async function LoginPage() {
 	}
 
 	return (
-	<div className="flex-center">
-		<Login />
-	</div>
+		<div className="flex-center">
+			<Login />
+		</div>
 	);
 }

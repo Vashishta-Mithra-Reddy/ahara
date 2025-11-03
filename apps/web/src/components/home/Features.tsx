@@ -2,62 +2,73 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, BarChart3, Calendar, Brain, Shield } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	BarChart3,
+	Calendar,
+	Brain,
+	Shield,
+} from "lucide-react";
 import { Button } from "../ui/button";
 
 const features = [
 	{
 		id: 1,
 		title: "Smart Food Tracking",
-		description: "Effortlessly log your meals with our intelligent food database. Track nutrients, portions, and timing to understand your eating patterns.",
+		description:
+			"Effortlessly log your meals with our intelligent food database. Track nutrients, portions, and timing to understand your eating patterns.",
 		icon: Calendar,
 		image: "/api/placeholder/600/400",
 		benefits: [
 			"Comprehensive food database",
 			"Quick meal logging",
 			"Nutritional insights",
-			"Portion tracking"
-		]
+			"Portion tracking",
+		],
 	},
 	{
 		id: 2,
 		title: "Symptom Correlation",
-		description: "Discover connections between what you eat and how you feel. Our AI analyzes patterns to help you identify trigger foods and beneficial nutrients.",
+		description:
+			"Discover connections between what you eat and how you feel. Our AI analyzes patterns to help you identify trigger foods and beneficial nutrients.",
 		icon: Brain,
 		image: "/api/placeholder/600/400",
 		benefits: [
 			"Pattern recognition",
 			"Trigger identification",
 			"Mood tracking",
-			"Health correlations"
-		]
+			"Health correlations",
+		],
 	},
 	{
 		id: 3,
 		title: "Personalized Insights",
-		description: "Get tailored recommendations based on your unique data. Understand your body's responses and optimize your diet for better health outcomes.",
+		description:
+			"Get tailored recommendations based on your unique data. Understand your body's responses and optimize your diet for better health outcomes.",
 		icon: BarChart3,
 		image: "/api/placeholder/600/400",
 		benefits: [
 			"Custom recommendations",
 			"Data-driven insights",
 			"Health optimization",
-			"Progress tracking"
-		]
+			"Progress tracking",
+		],
 	},
 	{
 		id: 4,
 		title: "Privacy First",
-		description: "Your health data is encrypted and secure. We prioritize your privacy while providing powerful insights to improve your well-being.",
+		description:
+			"Your health data is encrypted and secure. We prioritize your privacy while providing powerful insights to improve your well-being.",
 		icon: Shield,
 		image: "/api/placeholder/600/400",
 		benefits: [
 			"End-to-end encryption",
 			"HIPAA compliant",
 			"Data ownership",
-			"Secure storage"
-		]
-	}
+			"Secure storage",
+		],
+	},
 ];
 
 export default function Features() {
@@ -91,10 +102,12 @@ export default function Features() {
 					className="text-center mb-16"
 				>
 					<h2 className="font-outfit text-4xl md:text-5xl font-semibold text-foreground mb-4">
-						Powerful <span className="text-glow">Features</span> for Better Health
+						Powerful <span className="text-glow">Features</span> for Better
+						Health
 					</h2>
 					<p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-						Discover how our comprehensive platform helps you understand your body's unique responses to food and lifestyle choices.
+						Discover how our comprehensive platform helps you understand your
+						body's unique responses to food and lifestyle choices.
 					</p>
 				</motion.div>
 
@@ -119,7 +132,7 @@ export default function Features() {
 									</p>
 								</div>
 							</div>
-							
+
 							{/* Navigation Controls */}
 							<div className="absolute inset-y-0 left-4 flex items-center">
 								<Button
