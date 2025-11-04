@@ -12,7 +12,7 @@ const LiquidMetal = dynamic(
 
 export default function Footer() {
 	return (
-		<footer className="border-t-0 border-dashed px-4 pb-6 pt-4 font-jakarta">
+		<footer className="border-t-0 border-dashed px-4 pb-24 md:pb-6 pt-4 font-jakarta">
 			<div className="flex-center">
 				<div className="max-w-7xl flex-col-center">
 					<LiquidMetal

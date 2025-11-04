@@ -120,7 +120,7 @@ export default function OverviewPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between pb-4">
 				<div>
-					<h1 className="text-2xl font-bold">
+					<h1 className="text-xl md:text-2xl font-bold text-wrap">
 						Hey {session?.user?.name ? ` ${session.user.name}` : "Human"}, How was
 						your day?
 					</h1>
